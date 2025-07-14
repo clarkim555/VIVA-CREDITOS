@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simulador de Préstamos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+    }
+    nav {
+      background-color: #555;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      padding: 10px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    label, input {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      cursor: pointer;
+    }
+    #resultado {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mi Sitio Financiero</h1>
+  </header>
+  <nav>
+    <a href="#inicio">Inicio</a>
+    <a href="#simulador">Simulador de Préstamos</a>
+  </nav>
+
+  <div class="container" id="simulador">
+    <h2>Simulador de Préstamos</h2>
+    <label for="monto">Monto del préstamo (Gs):</label>
+    <input type="number" id="monto" placeholder="Ej: 5.000.000" />
+
+    <label for="plazo">Plazo (meses):</label>
+    <input type="number" id="plazo" placeholder="Ej: 12" />
+
+    <label for="tasa">Tasa de interés mensual (%):</label>
+    <input type="number" id="tasa" placeholder="Ej: 3" />
+
+    <button onclick="calcularPrestamo()">Calcular</button>
+
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    function calcularPrestamo() {
+      const monto = parseFloat(document.getElementById("monto").value);
+      const plazo = parseInt(document.getElementById("plazo").value);
+      const tasa = parseFloat(document.getElementById("tasa").value) / 100;
+
+      if (isNaN(monto) || isNaN(plazo) || isNaN(tasa)) {
+        document.getElementById("resultado").innerText = "Por favor, complete todos los campos correctamente.";
+        return;
+      }
+
+      const cuota = (monto * tasa) / (1 - Math.pow(1 + tasa, -plazo));
+      const total = cuota * plazo;
+
+      document.getElementById("resultado").innerHTML =
+        `<p>📌 Cuota mensual aproximada: <strong>Gs ${cuota.toFixed(0)}</strong></p>
+         <p>📈 Total a pagar: <strong>Gs ${total.toFixed(0)}</strong></p>`;
+    }
+  </script>
+</body>
+</html>
