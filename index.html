@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,66 +8,102 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      background-color: #fdfdfd;
       margin: 0;
       padding: 0;
     }
     header {
-      background-color: #333;
+      background-color: #800000;
       color: white;
-      padding: 10px 20px;
+      padding: 15px 20px;
       text-align: center;
     }
     nav {
-      background-color: #555;
+      background-color: #a52a2a;
       display: flex;
       justify-content: center;
-      gap: 15px;
+      gap: 20px;
       padding: 10px;
     }
     nav a {
       color: white;
       text-decoration: none;
+      font-weight: bold;
     }
     .container {
-      max-width: 600px;
+      max-width: 800px;
       margin: 20px auto;
       background-color: white;
       padding: 20px;
       border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     label, input {
       display: block;
       width: 100%;
       margin-bottom: 10px;
     }
+    input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
     button {
-      background-color: #28a745;
+      background-color: #800000;
       color: white;
       padding: 10px;
       width: 100%;
       border: none;
+      border-radius: 5px;
       cursor: pointer;
+      font-size: 16px;
     }
-    #resultado {
+    button:hover {
+      background-color: #a52a2a;
+    }
+    #resultado, #tabla-pagos {
       margin-top: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #800000;
+      color: white;
+    }
+    .whatsapp-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25d366;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 50px;
+      text-decoration: none;
       font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Mi Sitio Financiero</h1>
+    <h1>Simulador de Préstamos</h1>
   </header>
   <nav>
-    <a href="#inicio">Inicio</a>
-    <a href="#simulador">Simulador de Préstamos</a>
+    <a href="#simulador">Simulador</a>
+    <a href="#contacto">Contacto</a>
   </nav>
 
   <div class="container" id="simulador">
-    <h2>Simulador de Préstamos</h2>
+    <h2>Calculá tu préstamo</h2>
     <label for="monto">Monto del préstamo (Gs):</label>
-    <input type="number" id="monto" placeholder="Ej: 5.000.000" />
+    <input type="number" id="monto" placeholder="Ej: 5000000" />
 
     <label for="plazo">Plazo (meses):</label>
     <input type="number" id="plazo" placeholder="Ej: 12" />
@@ -77,7 +114,15 @@
     <button onclick="calcularPrestamo()">Calcular</button>
 
     <div id="resultado"></div>
+    <div id="tabla-pagos"></div>
   </div>
+
+  <div class="container" id="contacto">
+    <h2>Contacto</h2>
+    <p>📱 WhatsApp: <a href="https://wa.me/595981158518" target="_blank">+595 981 158518</a></p>
+  </div>
+
+  <a class="whatsapp-button" href="https://wa.me/595981158518?text=Hola,%20estoy%20interesado%20en%20un%20préstamo" target="_blank">📱 WhatsApp</a>
 
   <script>
     function calcularPrestamo() {
@@ -92,10 +137,22 @@
 
       const cuota = (monto * tasa) / (1 - Math.pow(1 + tasa, -plazo));
       const total = cuota * plazo;
+      let tabla = "<h3>Tabla de Pagos</h3><table><tr><th>Mes</th><th>Cuota (Gs)</th><th>Interés (Gs)</th><th>Amortización (Gs)</th><th>Saldo (Gs)</th></tr>";
+      let saldo = monto;
+
+      for (let i = 1; i <= plazo; i++) {
+        const interes = saldo * tasa;
+        const amortizacion = cuota - interes;
+        saldo -= amortizacion;
+        tabla += `<tr><td>${i}</td><td>${cuota.toFixed(0)}</td><td>${interes.toFixed(0)}</td><td>${amortizacion.toFixed(0)}</td><td>${saldo.toFixed(0)}</td></tr>`;
+      }
+      tabla += "</table>";
 
       document.getElementById("resultado").innerHTML =
         `<p>📌 Cuota mensual aproximada: <strong>Gs ${cuota.toFixed(0)}</strong></p>
          <p>📈 Total a pagar: <strong>Gs ${total.toFixed(0)}</strong></p>`;
+
+      document.getElementById("tabla-pagos").innerHTML = tabla;
     }
   </script>
 </body>
