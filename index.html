@@ -114,6 +114,8 @@
     const downloadBtn = document.getElementById('download-btn');
     const historialUl = document.getElementById('lista-historial');
 
+    const logoBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAJuElEQVR4nO2aW4xeVRXHf+sbeqMFSqG0paUytZ1piwgiATXqC2qC";
+
     function formatNumber(num, moneda) {
       if (moneda === 'USD') {
         return parseFloat(num).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -161,15 +163,23 @@
     downloadBtn.addEventListener('click', () => {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
-      doc.text("Tabla de Amortización - Sistema Francés", 14, 15);
 
-      const rows = Array.from(document.querySelectorAll('#tabla-cuotas tbody tr')).map(tr =>
-        Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
-      );
+      const img = new Image();
+      img.src = logoBase64;
+      img.onload = () => {
+        doc.addImage(img, 'PNG', 150, 10, 40, 20);
+        doc.setFontSize(12);
+        doc.setTextColor(50, 0, 0);
+        doc.text("Tabla de Amortización - Sistema Francés", 14, 25);
 
-      const headers = ["#", "Cuota", "Interés", "Amortización", "Saldo"];
-      doc.autoTable({ head: [headers], body: rows, startY: 20 });
-      doc.save("tabla_prestamo.pdf");
+        const rows = Array.from(document.querySelectorAll('#tabla-cuotas tbody tr')).map(tr =>
+          Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
+        );
+
+        const headers = ["#", "Cuota", "Interés", "Amortización", "Saldo"];
+        doc.autoTable({ head: [headers], body: rows, startY: 30 });
+        doc.save("tabla_prestamo.pdf");
+      };
     });
   </script>
 </body>
